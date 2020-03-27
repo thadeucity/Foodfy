@@ -20,7 +20,7 @@
 
 <p align="center">
   <a href="#blue_book-English">English</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
-  <a href="##blue_book-Português">Português</a>
+  <a href="#blue_book-Português">Português</a>
 </p>
 
 <img alt="Foodfy Logo" src="./sampleImages/homepage.png"/>
