@@ -23,6 +23,8 @@
   <a href="#lang-portuguese">Português</a>
 </p>
 
+<img alt="Foodfy Logo" src="./sampleImages/homepage.png"/>
+
 ## :blue_book: English
 
 ### Description
