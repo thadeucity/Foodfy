@@ -29,5 +29,5 @@ nunjucks.configure('src/app/views', {
 });
 
 server.listen(5000, function(){
-  console.log('Foodfy server is UP and running');
+  console.log('Foodfy server is UP and Running!');
 });

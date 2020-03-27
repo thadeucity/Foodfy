@@ -1,0 +1,11 @@
+.vscode
+
+.env
+
+node_modules/
+
+public/img/chefs_images/*
+public/img/recipes_images/*
+
+
+
