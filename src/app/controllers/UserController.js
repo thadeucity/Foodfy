@@ -14,23 +14,29 @@ module.exports={
     }
 
     let users = await User.findAll();
-    return res.render('admin/users/index', {users, admin:req.session.admin});
+
+    return res.render('admin/users/index', {users});
   },
+
   createForm(req,res){
     return res.render('admin/users/create');
   },
+
   async editForm(req,res){
     const user = await User.findOne(req.params.id);
 
-    const userfilter = {
-      id: user.id,
-      name: user.name,
-      email: user.email,
-      admin: user.is_admin
-    };
+    if (!user){
+      const AppError = {
+        code: 404,
+        message: Messages.fromParams('error', 404, 'user'), 
+      }
+      const error = AppError.message;
+      return res.render('admin/errors/index', { AppError, error });
+    }
 
-    return res.render('admin/users/edit', {user: userfilter});
+    return res.render('admin/users/edit', {user});
   },
+
   async post(req,res){
     try{
       const { name, email } = req.body;
@@ -60,7 +66,7 @@ module.exports={
 
       password = await hash(password, 8);
 
-      const userId = await User.create({
+      await User.create({
         name,
         email,
         is_admin,
@@ -68,17 +74,18 @@ module.exports={
       });
 
       return res.render('admin/users/index', {
-        success: `Congratulations the user ${name} was successfully created!`
+        success: Messages.fromParams('success', 201, name)
       });
 
     } catch(err){
       console.error(err);
       return res.render('admin/users/index', {
-        error: `Something went wrong, the system was unable to create the user, try again later!`
+        error: Messages.fromParams('error', 501)
       });
     }
 
   },
+
   async put(req,res){
     const { name, email, id } = req.body;
 
@@ -118,7 +125,7 @@ module.exports={
 
       return res.render('session/login', {
         user: req.body,
-        success: "Your password was updated!"
+        success: Messages.fromParams('success', 100)
       });
 
     } catch (err){
@@ -136,13 +143,13 @@ module.exports={
     } catch (err){
       console.error(err);
       return res.render('session/reset-password', {
-        error: 'Something went wrong, try again later'
+        error: Messages.fromParams('error', 500)
       });
     }
 
     return res.render('session/login', {
       user: req.body,
-      success: "Your password was updated!"
+      success: Messages.fromParams('success', 100)
     });
 
   },

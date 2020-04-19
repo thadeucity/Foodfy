@@ -1,0 +1,17 @@
+{% extends "layout.njk" %}
+
+{% block content %}
+
+<div id="index-banner">
+  <div class="info">
+    <h1>Oops - {{error.code}}</h1>
+    <p>
+      {{error.message}}
+    </p>
+  </div>
+  <div class="image">
+    <img src="/img/chef-sad.png" alt="Chef - Error Ilustration">
+  </div>
+</div>
+
+{% endblock %}

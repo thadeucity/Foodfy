@@ -46,6 +46,9 @@ MAILER_PASS = // enter your mailer password
 
 DB_USER = //enter your Postgrees database username
 DB_PASS = // enter your Postgress database password
+DB_HOST = // enter the address for your Postgres Database host 
+DB_PORT = // enter your database port
+
 ```
 
 After that you can run:
@@ -57,10 +60,12 @@ Now you need to start your database with the code provided in the `database.sql`
 
 
 
-Finaly if you want to populate all SQL tables with test data you can run
+Finally if you want to populate all SQL tables with test data you can run
 ``` 
 node seed.js 
 ```
+
+*The base password for the seed users is **1234**
 
 
 
@@ -143,9 +148,11 @@ MAILER_PASS = // entre a senha do seu servidor de email
 
 DB_USER = // Entre com seu usuário do seu banco de dados Postgrees
 DB_PASS = // Entre com sua senha do seu banco de dados Postgrees
+DB_HOST = // Entre com o endereço de Host da sua Postgres Database 
+DB_PORT = // Entre a porta de comunicação do seu banco de dados
 ```
 
-Depois disso você pode rodar
+Depois disso você poderá rodar
 ``` 
 npm install 
 ```
@@ -159,6 +166,7 @@ Finalmente, caso queira popular suas planilhas do banco de dados com dados fict�
 node seed.js 
 ```
 
+*obs: A senha padrão para os usuários do seed é **1234**
 
 
 ----------------------
@@ -217,3 +225,12 @@ node seed.js
 - [x] Gerador dinâmico de imangens utilizando a API do [Placehold](http://placehold.it/)
 
 ----------------------
+
+
+## :memo: License
+
+This project is under the MIT license. See the [LICENSE](LICENSE.md) for details.
+
+---
+
+Made with ♥ by Victor Alvarenga :wave: [Get in touch!](https://www.linkedin.com/in/victoralvarenga/)

@@ -18,6 +18,12 @@ routes.get('/recipes/:id', RecipeController.show);
 routes.get('/chefs', ChefController.chefs);
 routes.get('/chefs/:id', ChefController.show);
 
+routes.use(function(error, req, res, next) {
+  return res.render('admin_layout', {
+    error: 'An unexpected error occurred, sorry for the inconvenience!'
+  });
+});
+
 // --------------------- ADMIN AREA --------------------- //
 
 routes.use('/admin', admin);

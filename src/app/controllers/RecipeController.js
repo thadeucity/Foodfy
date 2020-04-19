@@ -1,17 +1,15 @@
 const { unlinkSync } = require('fs');
 
+const Messages = require ('../../lib/messages');
+
 const LoadContentService = require ('../services/LoadContentService');
 
 const Recipe = require('../models/Recipe');
 const Chef = require('../models/Chef');
 const File = require ('../models/File');
 
-function isEditable (recipeOwner, user, adminStatus){
-  return (recipeOwner == user || adminStatus) ? true : false;
-}
-
 module.exports = {
-  async index (req, res){
+  async index (req, res){ // OK
 
     const paginate = {
       limit: 6,
@@ -22,7 +20,7 @@ module.exports = {
 
     return res.render('public/index', {recipes});
   },
-  async recipes (req, res){
+  async recipes (req, res){ // OK
     let { filter, page = 1, limit = 12 } = req.query;
     const offset = (limit * (page-1));   
 
@@ -44,12 +42,24 @@ module.exports = {
     return res.render('public/recipes', {recipes, pagination, filter});
 
   },
-  async show (req, res){
+  async show (req, res){ //OK
     const recipe = await LoadContentService.load('recipe', req.params.id);
+
+    if (!recipe){
+      const error = {
+        code: 404,
+        message: Messages.fromParams('error', 404, 'recipe'), 
+      }
+      return res.render('public/error', {error});
+    }
 
     return res.render('public/recipe_show', {recipe});
   },
-  //////////    ADMIN CONTROLLERS    //////////
+
+
+  //////////////////////////    ADMIN CONTROLLERS    //////////////////////////
+
+
   async adminRecipes (req, res){
     const filter = req.query.filter;
     let recipes = [];
@@ -71,29 +81,68 @@ module.exports = {
 
     return res.render('admin/recipes/index', {recipes, filtered});
   },
+
   async adminShow (req, res){
-    const recipe = await LoadContentService.load('recipe', req.params.id);
+    try {
+      const recipe = await LoadContentService.load('recipe', req.params.id);
 
-    const editable = isEditable(
-      recipe.user_id,
-      req.session.userId,
-      req.session.admin
-    );
+      if (!recipe){
+        const AppError = {
+          code: 404,
+          message: Messages.fromParams('error', 404, 'recipe'), 
+        }
+        const error = AppError.message;
+        return res.render('admin/errors/index', { AppError, error });
+      }
 
-    return res.render('admin/recipes/show', {recipe, editable});
+      const message = Messages.fromQuery(req.query);
+
+      return res.render('admin/recipes/show', {recipe, error:message.error});
+    } catch (err) {
+      console.error(err);
+    }
   },
+
   async create (req, res){
     const chefs = await Chef.findAll();
+
+    if (!chefs){
+      const AppError = {
+        code: 500,
+        message: Messages.fromParams('error', 500), 
+      }
+      const error = AppError.message;
+      return res.render('admin/errors/index', { AppError, error });
+    }
     
     return res.render('admin/recipes/create', {chefs});
   },
+
   async edit (req, res){
     const recipe = await LoadContentService.load('recipe', req.params.id);
     const chefs = await Chef.findAll();
 
+    if(!recipe || !chefs ){
+      let AppError = {
+        code: 500,
+        message: Messages.fromParams('error', 500), 
+      }
+  
+      if(!recipe){
+        AppError = {
+          code: 404,
+          message: Messages.fromParams('error', 404, 'recipe'), 
+        }
+      }
+
+      const error = AppError.message;
+      return res.render('admin/errors/index', { AppError, error });
+    }
+
     return res.render('admin/recipes/edit', {recipe, chefs}); 
   },
-  async post (req, res){ // Change to map
+
+  async post (req, res){
     let {title, chef_id, ingredients, preparation, information} = req.body;
     const recipeId = await Recipe.create({
       title,
@@ -114,6 +163,7 @@ module.exports = {
 
     return res.redirect(`/admin/recipes/${recipeId}`);
   },
+
   async put (req, res){
     let {title, chef_id, ingredients, preparation, information} = req.body;
     let recipeId = req.body.id;
@@ -155,6 +205,7 @@ module.exports = {
     return res.redirect(`/admin/recipes/${recipeId}`);
 
   },
+
   async delete(req, res){
     const files = await Recipe.files(req.body.id);
 

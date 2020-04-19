@@ -30,7 +30,7 @@ function errorMsg (code, data){
       break;
 
     case 300:
-      message = 'Foodfy is the system standart chef and cannot be edited or deleted!';
+      message = 'Foodfy is the system standard chef and cannot be edited or deleted!';
       break;
 
     case 301:
@@ -73,6 +73,18 @@ function errorMsg (code, data){
       message = `The New Password and Repeat New Password fields doesn't match!`;
       break;
 
+    case 404:
+      message = `We are sorry, unfortunately we can't find the ${data} you are looking for`;
+      break;
+
+    case 500:
+      message = `We are sorry, unfortunately something went wrong, try again latter`;
+      break;
+
+    case 501:
+      message = `Something went wrong, the system was unable to create the user, try again later!`;
+      break;
+
     case 600:
       message = 'Wrong Password!';
       break;
@@ -106,7 +118,7 @@ function errorMsg (code, data){
       break;
       
     default:
-      message = 'An unknown error occoured!'
+      message = 'An unknown error occurred!'
       break;
   }
   return message;
@@ -115,12 +127,20 @@ function errorMsg (code, data){
 function successMsg (code, data){
   let message = ``; 
   switch (code) {
+    case 100:
+      message = 'Your password was updated!';
+      break;
+      
     case 200:
-      message = 'Your profile was successfuly updated';
+      message = 'Your profile was successfully updated';
       break;
 
-      default:
-        break;
+    case 201:
+      message = `Congratulations the user ${data} was successfully created!`;
+      break;
+
+    default:
+      break;
   }
   return message;
 }

@@ -1,0 +1,15 @@
+{% extends "admin_layout.njk" %}
+
+{% block content %}
+
+  <div id="error-card" class="admin">
+    <div class="info">
+      <h1>Oops - {{AppError.code}}</h1>
+      <p>{{AppError.message}}</p>
+    </div>
+    <div class="image">
+      <img src="/img/chef-sad.png" alt="Chef Ilustration">
+    </div>
+  </div>
+
+{% endblock %}

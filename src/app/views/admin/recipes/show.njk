@@ -8,7 +8,7 @@
 
   <div class="admin-top-bar">
     <h1>Recipe: {{recipe.title}}</h1>
-    {% if editable %}
+    {% if (session.admin) or (session.userId == recipe.user_id)%}
       <a href="/admin/recipes/{{recipe.id}}/edit">Edit Recipe</a>
     {% endif %}
   </div>

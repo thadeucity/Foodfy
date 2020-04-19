@@ -8,7 +8,7 @@ module.exports = {
       const id = req.session.userId;
       const user = await User.find({where: { id }});
 
-      const userfilter = {
+      const userFilter = {
         id: user.id,
         name: user.name,
         email: user.email,
@@ -17,7 +17,7 @@ module.exports = {
       const message = Messages.fromQuery(req.query);
 
       return res.render('admin/users/profile', {
-        user: userfilter,
+        user: userFilter,
         error: message.error,
         alert: message.alert,
         success: message.success
@@ -35,7 +35,7 @@ module.exports = {
       id = req.session.userId;
 
       await User.update(id, {name, email})
-      const success = 200; // profile updated
+      const success = 200;
       return res.redirect(`/admin/profile?success=${success}`);
 
     } catch (err) {

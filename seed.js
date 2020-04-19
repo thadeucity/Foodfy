@@ -1,3 +1,5 @@
+require ('dotenv/config');
+
 const fs = require('fs');
 const request = require ('request');
 
@@ -92,7 +94,7 @@ async function resetfiles(folder){
     
   } catch (err) {
     console.error(err);
-    message(`Deleting processs for ${folder}`, true);
+    message(`Deleting process for ${folder}`, true);
   }
 }
 

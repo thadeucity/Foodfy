@@ -19,6 +19,14 @@ module.exports = {
 
     const chef = await LoadContentService.load('chef', { where: {id} });
 
+    if (!chef){
+      const error = {
+        code: 404,
+        message: Messages.fromParams('error', 404, 'chef'), 
+      }
+      return res.render('public/error', {error})
+    }
+
     return res.render('public/chefs_show', {chef});
   },
 
@@ -27,7 +35,7 @@ module.exports = {
   async adminChefs (req, res){
     const chefs = await LoadContentService.load('chefs');
     
-    return res.render('admin/chefs/index', {chefs, admin:req.session.admin});
+    return res.render('admin/chefs/index', {chefs});
   },
   
   async adminShow (req, res){
@@ -35,7 +43,16 @@ module.exports = {
 
     const chef = await LoadContentService.load('chef', { where: {id} });
 
-    return res.render('admin/chefs/show', {chef, admin:req.session.admin});
+    if (!chef){
+      const AppError = {
+        code: 404,
+        message: Messages.fromParams('error', 404, 'chef'), 
+      }
+      const error = AppError.message;
+      return res.render('admin/errors/index', { AppError, error });
+    }
+
+    return res.render('admin/chefs/show', {chef});
   },
 
   create (req, res){
@@ -44,18 +61,17 @@ module.exports = {
     return res.render('admin/chefs/create', {error});
   },
 
-  async post (req, res){ // Create a Service for saving 
+  async post (req, res){
     try {
       const {name} = req.body
       const chefId = await Chef.create({name});
   
-      for (const file of req.files){       // Change to req.files[].path
-        const fileId = await File.create({
-          name: `${name}_avatar`,
-          path: file.path
-        });
-        await Chef.linkFile(chefId, fileId);
-      }
+      const fileId = await File.create({
+        name: `${name}_avatar`,
+        path: req.files[0].path
+      });
+      await Chef.linkFile(chefId, fileId);
+
 
       return res.redirect(`/admin/chefs/${chefId}`);
 
@@ -84,13 +100,11 @@ module.exports = {
   
         await File.delete(avatar.id);
   
-        for (const file of req.files){  // Change to req.files[].path
-          const fileId = await File.create({
-            name: `${name}_avatar`,
-            path: file.path
-          });
-          await Chef.linkFile(id, fileId);
-        }
+        const fileId = await File.create({
+          name: `${name}_avatar`,
+          path: req.files[0].path
+        });
+        await Chef.linkFile(id, fileId);
       }
     
       await Chef.update(id,{name});
